@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="acc_logo">MWS logo</string>
+
     <string name="app_name">MathWebSearch</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="hint_text">Search text</string>
+    <string name="hint_latex">Search latex</string>
+    <string name="btn_search">Search</string>
 
 </resources>
