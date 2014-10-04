@@ -57,7 +57,9 @@ public class TemaTask extends AsyncTask<String, Void, String>{
         String contentML = params[1];
 
         List<NameValuePair> getParam = new ArrayList<NameValuePair>(4);
-        getParam.add(new BasicNameValuePair("text", text));
+        if (!text.equalsIgnoreCase("")) {
+            getParam.add(new BasicNameValuePair("text", text));
+        }
         getParam.add(new BasicNameValuePair("math", contentML));
         getParam.add(new BasicNameValuePair("from", FROM));
         getParam.add(new BasicNameValuePair("size", SIZE));
