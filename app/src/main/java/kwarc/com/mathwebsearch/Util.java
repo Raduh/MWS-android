@@ -1,5 +1,7 @@
 package kwarc.com.mathwebsearch;
 
+import android.content.Context;
+
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,10 +52,65 @@ public class Util {
         return null;
     }
 
+    public static String getFileContents(Context context, int rawId) throws IOException {
+        InputStream raw = context.getResources().openRawResource(rawId);
+        BufferedReader buf = new BufferedReader(new InputStreamReader(raw));
+
+        StringBuilder content = new StringBuilder();
+        String line;
+        while ((line = buf.readLine()) != null) {
+            content.append(line);
+        }
+        buf.close();
+
+        return content.toString();
+
+    }
+
+    private static String fillSnippet(String snippet, JSONArray maths) throws JSONException{
+        String result = "" + snippet;
+
+        for (int i = 0; i < maths.length(); i++) {
+            JSONObject math = maths.getJSONObject(i);
+            String source = math.getString("source");
+            String replace = math.getString("replaces");
+
+            result = result.replaceAll(replace, source);
+        }
+
+        return result;
+    }
+
+    private static String processHit(JSONObject hit) throws JSONException {
+        JSONArray snippets = hit.getJSONArray("snippets");
+        JSONArray maths = hit.getJSONArray("maths");
+
+        StringBuilder snippetBuilder = new StringBuilder();
+        for (int i = 0; i < snippets.length(); i++) {
+            String curr = snippets.getString(i);
+            snippetBuilder.append(curr);
+        }
+        String mergedSnip = snippetBuilder.toString();
+        return fillSnippet(mergedSnip, maths);
+    }
+    // TODO: return ArrayList<String> with the hits
     public static String processTemaResponse(String temaResponse) throws JSONException {
         JSONObject temaRespJSON = new JSONObject(temaResponse);
-        int total = temaRespJSON.getInt("total");
+        JSONArray hits = temaRespJSON.getJSONArray("hits");
 
-        return ("Retrieved " + total + " results.\n");
+        ArrayList<String> processedHits = new ArrayList<String>();
+        for (int i = 0; i < hits.length(); i++) {
+            JSONObject curr = hits.getJSONObject(i);
+            processedHits.add(processHit(curr));
+        }
+
+        StringBuilder htmlBuilder = new StringBuilder();
+        for (String elem : processedHits) {
+            htmlBuilder.append(elem);
+            htmlBuilder.append("<hr/>");
+        }
+
+        return htmlBuilder.toString();
     }
+
 }

@@ -93,6 +93,4 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
             latexMlTxt.setText("You were fucked");
         }
     }
-
-
 }
