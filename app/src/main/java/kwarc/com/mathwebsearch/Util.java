@@ -32,8 +32,8 @@ public class Util {
     }
 
     public static String getContentMathML(String latexMLResponse) {
-        String CML_REGEX = "<annotation-xml.*MWS-Query\\\\\">(.*)<\\\\/annotation-xml>";
-        Pattern pattern = Pattern.compile(CML_REGEX);
+        String CML_REGEX = "<annotation-xml.*MWS-Query\">(.*)<.annotation-xml>";
+        Pattern pattern = Pattern.compile(CML_REGEX, Pattern.DOTALL);
 
         try {
             JSONObject latexMLJSON = new JSONObject(latexMLResponse);

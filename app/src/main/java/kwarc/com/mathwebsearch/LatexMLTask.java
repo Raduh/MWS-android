@@ -87,7 +87,7 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
                 latexMlTxt.append("Could not find CML\n");
                 return;
             }
-            activity = null;
+
             new TemaTask(activity).execute(qText, qCML);
         } else {
             latexMlTxt.setText("You were fucked");
