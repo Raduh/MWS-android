@@ -21,17 +21,20 @@
             android:contentDescription="@string/acc_logo"
             android:src="@drawable/mwslogo" />
 
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/logo_imgvw"
+            android:gravity="center_horizontal"
             android:text="@string/app_name"
             android:textColor="@color/dim_red"
             android:textSize="25sp"
             android:textStyle="bold"
             android:typeface="monospace" />
+
 
         <EditText
             android:id="@+id/text_input"
@@ -59,7 +62,6 @@
             android:textColor="@color/black" />
 
         <Button
-            android:onClick="startSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -68,11 +70,23 @@
             android:layout_marginBottom="30dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/round_shape"
+            android:onClick="startSearch"
             android:padding="10dip"
             android:text="@string/btn_search"
             android:textColor="@color/black"
             android:textSize="19sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/fillinImg"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/fillin"
+            android:padding="9dip"
+            android:layout_marginRight="9dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/acc_fillin" />
 
     </RelativeLayout>
 </ScrollView>

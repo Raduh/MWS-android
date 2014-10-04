@@ -2,11 +2,14 @@ package kwarc.com.mathwebsearch;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,7 +28,7 @@ import java.util.List;
  * @author Radu Hambasan
  * @date 4 Oct 2014
  */
-public class TemaTask extends AsyncTask<String, Void, String>{
+public class TemaTask extends AsyncTask<String, Void, String> {
     private static final String TEMA_URL =
             "http://212.201.44.161/arxiv-ntcir/php/tema_proxy.php";
     HttpClient httpClient = new DefaultHttpClient();
@@ -37,8 +40,6 @@ public class TemaTask extends AsyncTask<String, Void, String>{
 
     final String FROM = "0";
     final String SIZE = "3";
-
-    String jsHeader = null;
 
     public TemaTask(Activity activity) {
         this.activity = activity;
@@ -77,8 +78,6 @@ public class TemaTask extends AsyncTask<String, Void, String>{
             HttpResponse temaHttpResp = httpClient.execute(httpGet);
             String temaResp_str = Util.getStringResponse(temaHttpResp);
 
-            if (jsHeader == null) jsHeader = extractHeader();
-
             return Util.processTemaResponse(temaResp_str);
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,35 +88,28 @@ public class TemaTask extends AsyncTask<String, Void, String>{
         return null;
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onPostExecute(String result) {
         progr.setVisibility(View.GONE);
         status.append("Completed Tema Call");
 
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setBuiltInZoomControls(true);
+
+        //webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         webview.setVisibility(View.VISIBLE);
         String htmlContent = "";
-        if (jsHeader != null) {
-            htmlContent += jsHeader;
-        }
         htmlContent += result;
+        // should we escape math elements?
 
-        final String base_url = "http://local/";
-        webview.loadDataWithBaseURL(base_url, htmlContent, "text/html", "utf-8", null);
+        final String insertHitJs =
+                "javascript:document.getElementById('body').innerHTML='" + htmlContent +"'; console.log(document.getElementById('body').innerHTML);";
+        webview.loadUrl(insertHitJs);
+
 
         final String renderedMathJs =
                 "javascript:MathJax.Hub.Queue(['Typeset',MathJax.Hub]);";
-        webview.loadUrl(renderedMathJs);
-    }
 
-    protected String extractHeader() {
-        try {
-            return Util.getFileContents(activity, R.raw.configmathjax);
-        } catch (IOException e) {
-            return null;
-        }
+        webview.loadUrl(renderedMathJs);
+
     }
 }

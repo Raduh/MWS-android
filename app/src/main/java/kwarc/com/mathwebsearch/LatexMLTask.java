@@ -81,7 +81,7 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         latexMlProgr.setVisibility(View.GONE);
         if (result != null) {
-            latexMlTxt.setText("latexMl conversion done\n");
+            latexMlTxt.setText("latexML conversion done\n");
             qCML = Util.getContentMathML(result);
             if (qCML == null) {
                 latexMlTxt.append("Could not find CML\n");

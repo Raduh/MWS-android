@@ -1,24 +1,21 @@
+<html>
+<!--
 <script type='text/x-mathjax-config'>
 MathJax.Hub.Config({ 
   showMathMenu: false,
-  jax: ['input/TeX','output/HTML-CSS'],
+  jax: ['input/MathML','output/HTML-CSS'],
   extensions: ['tex2jax.js','toMathML.js'],
   TeX: { extensions: ['AMSmath.js','AMSsymbols.js', 'noErrors.js','noUndefined.js'] },
   'SVG' : { blacker: 30, styles: { path: { 'shape-rendering': 'crispEdges' } } }
   });
 </script>
+-->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 <script type='text/javascript'
 src='file:///android_asset/MathJax/MathJax.js'>
 </script>
-<script type='text/javascript'>
-  getLiteralMML = function() {
-    math=MathJax.Hub.getAllJax('math')[0];
-    mml=math.root.toMathML('');
-    return mml;
-  };
-  getEscapedMML = function() {
-    math=MathJax.Hub.getAllJax('math')[0];
-    mml=math.root.toMathMLquote(getLiteralMML());
-    return mml;
-  }
-</script>
+<body id="body"></body>
+
+</html>

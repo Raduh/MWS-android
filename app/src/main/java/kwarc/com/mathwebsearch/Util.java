@@ -113,4 +113,13 @@ public class Util {
         return htmlBuilder.toString();
     }
 
+    public static String escapeMath(String s) {
+        StringBuilder buf = new StringBuilder(s.length());
+        for (int i=0; i < s.length(); i++) {
+            if (s.charAt(i) == '\'') buf.append('\\');
+            if (s.charAt(i) != '\n') buf.append(s.charAt(i));
+            if (s.charAt(i) == '\\') buf.append("\\");
+        }
+        return buf.toString();
+    }
 }

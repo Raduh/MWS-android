@@ -28,6 +28,6 @@
         android:layout_below="@id/latexmltxt"
         android:layout_marginTop="20dp"
         android:padding="10dip"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>
