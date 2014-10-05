@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="kwarc.com.mathwebsearch.ResultsActivity">
+    tools:context="com.kwarc.mathwebsearch.ResultsActivity">
 
     <ImageView
         android:id="@+id/statusColor"
@@ -32,7 +32,7 @@
         android:layout_centerInParent="true"
         android:foregroundGravity="center">
 
-        <kwarc.com.mathwebsearch.RefreshableWebView
+        <com.kwarc.mathwebsearch.RefreshableWebView
             android:id="@+id/results_webvw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

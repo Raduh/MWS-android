@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kwarc.com.mathwebsearch">
+    package="com.kwarc.mathwebsearch">
 
     <!-- for sending GET requests to MWS -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.kwarc.mathwebsearch.MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.NoActionBar">
             <intent-filter>
@@ -21,15 +21,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ResultsActivity"
+            android:name="com.kwarc.mathwebsearch.ResultsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_results"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.kwarc.mathwebsearch.MainActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Holo.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="kwarc.com.mathwebsearch.MainActivity" />
+                android:value="com.kwarc.mathwebsearch.MainActivity" />
         </activity>
     </application>
 

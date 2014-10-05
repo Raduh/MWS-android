@@ -1,4 +1,4 @@
-package kwarc.com.mathwebsearch;
+package com.kwarc.mathwebsearch;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
