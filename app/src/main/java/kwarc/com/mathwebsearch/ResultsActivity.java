@@ -22,7 +22,6 @@ public class ResultsActivity extends Activity {
         String qText = creator.getStringExtra(MainActivity.EXTRA_TEXT);
         String qLatex = creator.getStringExtra(MainActivity.EXTRA_LATEX);
 
-
         WebView webview = (WebView) findViewById(R.id.results_webvw);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(true);
