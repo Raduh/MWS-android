@@ -9,13 +9,12 @@
     tools:context="kwarc.com.mathwebsearch.ResultsActivity">
 
     <TextView
-        android:id="@+id/latexmltxt"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_height="wrap_content"/>
 
     <ProgressBar
-        android:id="@+id/latexmlprogr"
+        android:id="@+id/progr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -25,7 +24,7 @@
         android:id="@+id/results_webvw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/latexmltxt"
+        android:layout_below="@id/status"
         android:layout_marginTop="20dp"
         android:padding="10dip"
         android:visibility="gone" />

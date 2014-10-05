@@ -26,6 +26,12 @@ public class MainActivity extends Activity {
 
         textInput = (EditText) findViewById(R.id.text_input);
         latexInput = (EditText) findViewById(R.id.latex_input);
+        findViewById(R.id.fillinImg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fillInExample();
+            }
+        });
     }
 
     public void startSearch(View view) {
@@ -36,4 +42,13 @@ public class MainActivity extends Activity {
         searchIntent.putExtra(EXTRA_LATEX, latex);
         startActivity(searchIntent);
     }
+
+    private void fillInExample() {
+        final String textExample = "Fermat";
+        final String latexExample = "a^?n + b^?n=c^?n";
+
+        textInput.setText(textExample);
+        latexInput.setText(latexExample);
+    }
+
 }

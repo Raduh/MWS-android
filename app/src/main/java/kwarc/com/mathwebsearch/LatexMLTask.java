@@ -40,8 +40,8 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
 
     public LatexMLTask(Activity activity) {
         this.activity = activity;
-        latexMlTxt = (TextView) activity.findViewById(R.id.latexmltxt);
-        latexMlProgr = (ProgressBar) activity.findViewById(R.id.latexmlprogr);
+        latexMlTxt = (TextView) activity.findViewById(R.id.status);
+        latexMlProgr = (ProgressBar) activity.findViewById(R.id.progr);
     }
 
     @Override

@@ -43,8 +43,8 @@ public class TemaTask extends AsyncTask<String, Void, String> {
 
     public TemaTask(Activity activity) {
         this.activity = activity;
-        status = (TextView) activity.findViewById(R.id.latexmltxt);
-        progr = (ProgressBar) activity.findViewById(R.id.latexmlprogr);
+        status = (TextView) activity.findViewById(R.id.status);
+        progr = (ProgressBar) activity.findViewById(R.id.progr);
         webview = (WebView) activity.findViewById(R.id.results_webvw);
     }
 
