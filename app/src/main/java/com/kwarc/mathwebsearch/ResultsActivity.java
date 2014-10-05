@@ -16,7 +16,6 @@ public class ResultsActivity extends Activity {
         setContentView(R.layout.activity_results);
 
         findViewById(R.id.statusDescr).setVisibility(View.VISIBLE);
-        findViewById(R.id.statusColor).setVisibility(View.VISIBLE);
 
         Intent creator = getIntent();
         String qText = creator.getStringExtra(MainActivity.EXTRA_TEXT);

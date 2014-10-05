@@ -1,10 +1,8 @@
 package com.kwarc.mathwebsearch;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,7 +31,6 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
     HttpPost httpPost = new HttpPost(LATEXML_URL);
 
     TextView statusDescr;
-    ImageView statusColor;
     ProgressBar progrCircle;
 
     Activity activity;
@@ -41,21 +38,20 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
     String qText;
     String qCML;
 
-    ColorDrawable red = new ColorDrawable(0xffff0000);
-    ColorDrawable yellow = new ColorDrawable(0xffffff00);
-    ColorDrawable green = new ColorDrawable(0xff00ff00);
+    static int red = 0xffff0000;
+    static int yellow = 0xffffff00;
 
     public LatexMLTask(Activity activity) {
         this.activity = activity;
         statusDescr = (TextView) activity.findViewById(R.id.statusDescr);
-        statusColor = (ImageView) activity.findViewById(R.id.statusColor);
         progrCircle = (ProgressBar) activity.findViewById(R.id.progrCircle);
     }
 
     @Override
     protected void onPreExecute() {
         statusDescr.setText("Converting to Latex to MathML...");
-        statusColor.setBackground(yellow);
+        statusDescr.setTextColor(yellow);
+        statusDescr.setVisibility(View.VISIBLE);
         progrCircle.setVisibility(View.VISIBLE);
     }
 
@@ -94,7 +90,7 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
             qCML = Util.getContentMathML(result);
             if (qCML == null) {
                 statusDescr.setText("Could not find CML\n");
-                statusColor.setBackground(red);
+
                 return;
             }
 
@@ -105,7 +101,7 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
             new TemaTask(activity).execute(qText, qCML, DEFAULT_FROM, DEFAULT_SIZE);
         } else {
             statusDescr.setText("An error occurred.");
-            statusColor.setBackground(red);
+            statusDescr.setTextColor(red);
         }
     }
 }

@@ -1,11 +1,9 @@
 package com.kwarc.mathwebsearch;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -41,13 +39,12 @@ public class TemaTask extends AsyncTask<String, Void, String> {
 
     Activity activity;
     TextView statusDescr;
-    ImageView statusColor;
     ProgressBar progr;
     RefreshableWebView webview;
 
-    static ColorDrawable red = new ColorDrawable(0xffff0000);
-    static ColorDrawable yellow = new ColorDrawable(0xffffff00);
-    static ColorDrawable green = new ColorDrawable(0xff00ff00);
+    static int red = 0xffff0000;
+    static int yellow = 0xffffff00;
+    static int green = 0xff00ff00;
 
     public static void initialize() {
         firstCall = true;
@@ -55,10 +52,13 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         hasMoreResults = true;
     }
 
+    /**
+     * Must call initialize() before
+     * TODO: use Factory Pattern
+     */
     public TemaTask(Activity activity) {
         this.activity = activity;
         statusDescr = (TextView) activity.findViewById(R.id.statusDescr);
-        statusColor = (ImageView) activity.findViewById(R.id.statusColor);
         progr = (ProgressBar) activity.findViewById(R.id.progrCircle);
         webview = (RefreshableWebView) activity.findViewById(R.id.results_webvw);
     }
@@ -68,10 +68,9 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         isExecuting = true;
         progr.setVisibility(View.VISIBLE);
         if (firstCall) webview.setVisibility(View.GONE);
-        statusDescr.setVisibility(View.VISIBLE);
-        statusColor.setVisibility(View.VISIBLE);
-        statusColor.setBackground(yellow);
         statusDescr.setText("Processing CMML Query...");
+        statusDescr.setTextColor(yellow);
+        statusDescr.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -127,13 +126,13 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         firstCall = false;
         if (result == null) {
             statusDescr.setText("An error occurred.");
-            statusColor.setBackground(red);
+            statusDescr.setTextColor(red);
             return;
 
         }
         progr.setVisibility(View.GONE);
         statusDescr.setText("Completed TeMa Query");
-        statusColor.setBackground(green);
+        statusDescr.setTextColor(green);
         webview.setVisibility(View.VISIBLE);
 
         if (result.isEmpty() && wasFirstCall) {
@@ -176,7 +175,6 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                statusColor.setVisibility(View.GONE);
                 statusDescr.setVisibility(View.GONE);
             }
         }, DELAY);

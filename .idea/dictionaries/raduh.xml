@@ -2,10 +2,16 @@
   <dictionary name="raduh">
     <words>
       <w>cmml</w>
+      <w>descr</w>
+      <w>kwarc</w>
       <w>latexml</w>
+      <w>mathwebsearch</w>
       <w>ntcir</w>
       <w>proc</w>
+      <w>progr</w>
       <w>tema</w>
+      <w>webview</w>
+      <w>webvw</w>
     </words>
   </dictionary>
 </component>
