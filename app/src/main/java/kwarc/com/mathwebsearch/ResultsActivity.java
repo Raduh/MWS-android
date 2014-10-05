@@ -4,12 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-
-import kwarc.com.mathwebsearch.R;
 
 public class ResultsActivity extends Activity {
 
@@ -18,6 +14,9 @@ public class ResultsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
+        findViewById(R.id.statusDescr).setVisibility(View.VISIBLE);
+        findViewById(R.id.statusColor).setVisibility(View.VISIBLE);
 
         Intent creator = getIntent();
         String qText = creator.getStringExtra(MainActivity.EXTRA_TEXT);

@@ -3,11 +3,9 @@ package kwarc.com.mathwebsearch;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * @author Radu Hambasan
@@ -37,6 +35,13 @@ public class MainActivity extends Activity {
     public void startSearch(View view) {
         String text = textInput.getText().toString();
         String latex = latexInput.getText().toString();
+        if (latex.equalsIgnoreCase("")) {
+            final String message = "The latex query cannot be empty.\n" +
+                    "If the formula can match anything, use a qvar: ?x";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent searchIntent = new Intent(this, ResultsActivity.class);
         searchIntent.putExtra(EXTRA_TEXT, text);
         searchIntent.putExtra(EXTRA_LATEX, latex);

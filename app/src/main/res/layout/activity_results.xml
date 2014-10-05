@@ -8,13 +8,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="kwarc.com.mathwebsearch.ResultsActivity">
 
+    <ImageView
+        android:id="@+id/statusColor"
+        android:layout_width="20dp"
+        android:layout_height="40dp"
+        android:background="@color/red"
+        android:contentDescription="@string/acc_status" />
+
     <TextView
-        android:id="@+id/status"
+        android:id="@+id/statusDescr"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="40dp"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@id/statusColor"
+        android:gravity="center"
+        android:text="@string/initialStatusDescr"
+        android:textSize="18sp" />
 
     <ProgressBar
-        android:id="@+id/progr"
+        android:id="@+id/progrCircle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -24,7 +36,7 @@
         android:id="@+id/results_webvw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/status"
+        android:layout_below="@id/statusDescr"
         android:layout_marginTop="20dp"
         android:padding="10dip"
         android:visibility="gone" />

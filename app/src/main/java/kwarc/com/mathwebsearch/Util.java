@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
  * @date 04 Oct 2014
  */
 public class Util {
+    public static final String TITLE_PREFIX = "arxiv.org: ";
+
     public static String getStringResponse(HttpResponse response) throws IOException {
         InputStream inStr = response.getEntity().getContent();
         BufferedReader buf = new BufferedReader(new InputStreamReader(inStr));
@@ -84,8 +86,11 @@ public class Util {
     private static String processHit(JSONObject hit) throws JSONException {
         JSONArray snippets = hit.getJSONArray("snippets");
         JSONArray maths = hit.getJSONArray("maths");
+        JSONObject metadata = hit.getJSONObject("metadata");
+        final String title = TITLE_PREFIX + metadata.getString("title");
 
         StringBuilder snippetBuilder = new StringBuilder();
+        snippetBuilder.append("<h2>").append(title).append("</h2>");
         for (int i = 0; i < snippets.length(); i++) {
             String curr = snippets.getString(i);
             snippetBuilder.append(curr);
@@ -93,6 +98,7 @@ public class Util {
         String mergedSnip = snippetBuilder.toString();
         return fillSnippet(mergedSnip, maths);
     }
+
     // TODO: return ArrayList<String> with the hits
     public static String processTemaResponse(String temaResponse) throws JSONException {
         JSONObject temaRespJSON = new JSONObject(temaResponse);
@@ -111,15 +117,5 @@ public class Util {
         }
 
         return htmlBuilder.toString();
-    }
-
-    public static String escapeMath(String s) {
-        StringBuilder buf = new StringBuilder(s.length());
-        for (int i=0; i < s.length(); i++) {
-            if (s.charAt(i) == '\'') buf.append('\\');
-            if (s.charAt(i) != '\n') buf.append(s.charAt(i));
-            if (s.charAt(i) == '\\') buf.append("\\");
-        }
-        return buf.toString();
     }
 }

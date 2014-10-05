@@ -1,8 +1,10 @@
 package kwarc.com.mathwebsearch;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,24 +32,31 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
     HttpClient httpClient = new DefaultHttpClient();
     HttpPost httpPost = new HttpPost(LATEXML_URL);
 
-    TextView latexMlTxt;
-    ProgressBar latexMlProgr;
+    TextView statusDescr;
+    ImageView statusColor;
+    ProgressBar progrCircle;
 
     Activity activity;
 
     String qText;
     String qCML;
 
+    ColorDrawable red = new ColorDrawable(0xffff0000);
+    ColorDrawable yellow = new ColorDrawable(0xffffff00);
+    ColorDrawable green = new ColorDrawable(0xff00ff00);
+
     public LatexMLTask(Activity activity) {
         this.activity = activity;
-        latexMlTxt = (TextView) activity.findViewById(R.id.status);
-        latexMlProgr = (ProgressBar) activity.findViewById(R.id.progr);
+        statusDescr = (TextView) activity.findViewById(R.id.statusDescr);
+        statusColor = (ImageView) activity.findViewById(R.id.statusColor);
+        progrCircle = (ProgressBar) activity.findViewById(R.id.progrCircle);
     }
 
     @Override
     protected void onPreExecute() {
-        latexMlTxt.setText("Processing...");
-        latexMlProgr.setVisibility(View.VISIBLE);
+        statusDescr.setText("Converting to Latex to MathML...");
+        statusColor.setBackground(yellow);
+        progrCircle.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -79,18 +88,20 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        latexMlProgr.setVisibility(View.GONE);
+        progrCircle.setVisibility(View.GONE);
         if (result != null) {
-            latexMlTxt.setText("latexML conversion done\n");
+            statusDescr.setText("LatexML conversion done\n");
             qCML = Util.getContentMathML(result);
             if (qCML == null) {
-                latexMlTxt.append("Could not find CML\n");
+                statusDescr.setText("Could not find CML\n");
+                statusColor.setBackground(red);
                 return;
             }
 
             new TemaTask(activity).execute(qText, qCML);
         } else {
-            latexMlTxt.setText("You were fucked");
+            statusDescr.setText("An error occurred.");
+            statusColor.setBackground(red);
         }
     }
 }

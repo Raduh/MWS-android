@@ -1,15 +1,14 @@
 package kwarc.com.mathwebsearch;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ClipData;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,17 +33,23 @@ public class TemaTask extends AsyncTask<String, Void, String> {
     HttpClient httpClient = new DefaultHttpClient();
 
     Activity activity;
-    TextView status;
+    TextView statusDescr;
+    ImageView statusColor;
     ProgressBar progr;
     WebView webview;
 
     final String FROM = "0";
-    final String SIZE = "3";
+    final String SIZE = "5";
+
+    ColorDrawable red = new ColorDrawable(0xffff0000);
+    ColorDrawable yellow = new ColorDrawable(0xffffff00);
+    ColorDrawable green = new ColorDrawable(0xff00ff00);
 
     public TemaTask(Activity activity) {
         this.activity = activity;
-        status = (TextView) activity.findViewById(R.id.status);
-        progr = (ProgressBar) activity.findViewById(R.id.progr);
+        statusDescr = (TextView) activity.findViewById(R.id.statusDescr);
+        statusColor = (ImageView) activity.findViewById(R.id.statusColor);
+        progr = (ProgressBar) activity.findViewById(R.id.progrCircle);
         webview = (WebView) activity.findViewById(R.id.results_webvw);
     }
 
@@ -52,7 +57,7 @@ public class TemaTask extends AsyncTask<String, Void, String> {
     protected void onPreExecute() {
         progr.setVisibility(View.VISIBLE);
         webview.setVisibility(View.GONE);
-        status.append("Processing TemaQuery...\n");
+        statusDescr.setText("Processing CMML Query...");
     }
 
     @Override
@@ -90,11 +95,15 @@ public class TemaTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        if (result == null) {
+            statusDescr.setText("An error occurred.");
+            statusColor.setBackground(red);
+            return;
+
+        }
         progr.setVisibility(View.GONE);
-        status.append("Completed Tema Call");
-
-
-        //webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        statusDescr.setText("Completed TeMa Query");
+        statusColor.setBackground(green);
 
         webview.setVisibility(View.VISIBLE);
         String htmlContent = "";
@@ -102,7 +111,7 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         // should we escape math elements?
 
         final String insertHitJs =
-                "javascript:document.getElementById('body').innerHTML='" + htmlContent +"'; console.log(document.getElementById('body').innerHTML);";
+                "javascript:document.getElementById('body').innerHTML='" + htmlContent +"';";
         webview.loadUrl(insertHitJs);
 
 
@@ -111,5 +120,18 @@ public class TemaTask extends AsyncTask<String, Void, String> {
 
         webview.loadUrl(renderedMathJs);
 
+        hideStatusAfterDelay();
+    }
+
+    private void hideStatusAfterDelay() {
+        final int DELAY = 2000;  // ms
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                statusColor.setVisibility(View.GONE);
+                statusDescr.setVisibility(View.GONE);
+            }
+        }, DELAY);
     }
 }
