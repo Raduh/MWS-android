@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +27,14 @@ import java.util.List;
  * @date 4 Oct 2014
  */
 public class TemaTask extends AsyncTask<String, Void, String> {
+    private static boolean firstCall = true;
+    private static boolean isExecuting = false;
+    private static boolean hasMoreResults = true;
+    private int nextFROM;
+    private int hitChunkSIZE;
+    private String queryCMML;
+    private String queryText;
+
     private static final String TEMA_URL =
             "http://212.201.44.161/arxiv-ntcir/php/tema_proxy.php";
     HttpClient httpClient = new DefaultHttpClient();
@@ -36,44 +43,59 @@ public class TemaTask extends AsyncTask<String, Void, String> {
     TextView statusDescr;
     ImageView statusColor;
     ProgressBar progr;
-    WebView webview;
+    RefreshableWebView webview;
 
-    final String FROM = "0";
-    final String SIZE = "5";
+    static ColorDrawable red = new ColorDrawable(0xffff0000);
+    static ColorDrawable yellow = new ColorDrawable(0xffffff00);
+    static ColorDrawable green = new ColorDrawable(0xff00ff00);
 
-    ColorDrawable red = new ColorDrawable(0xffff0000);
-    ColorDrawable yellow = new ColorDrawable(0xffffff00);
-    ColorDrawable green = new ColorDrawable(0xff00ff00);
+    public static void initialize() {
+        firstCall = true;
+        isExecuting = false;
+        hasMoreResults = true;
+    }
 
     public TemaTask(Activity activity) {
         this.activity = activity;
         statusDescr = (TextView) activity.findViewById(R.id.statusDescr);
         statusColor = (ImageView) activity.findViewById(R.id.statusColor);
         progr = (ProgressBar) activity.findViewById(R.id.progrCircle);
-        webview = (WebView) activity.findViewById(R.id.results_webvw);
+        webview = (RefreshableWebView) activity.findViewById(R.id.results_webvw);
     }
 
     @Override
     protected void onPreExecute() {
+        isExecuting = true;
         progr.setVisibility(View.VISIBLE);
-        webview.setVisibility(View.GONE);
+        if (firstCall) webview.setVisibility(View.GONE);
+        statusDescr.setVisibility(View.VISIBLE);
+        statusColor.setVisibility(View.VISIBLE);
+        statusColor.setBackground(yellow);
         statusDescr.setText("Processing CMML Query...");
     }
 
     @Override
     protected String doInBackground(String... params) {
-        if (params == null || params.length != 2) return null;
+        if (params == null || params.length != 4) return null;
 
-        String text = params[0];
-        String contentML = params[1];
+        String qText = params[0];
+        queryText = qText;
+        String qContentML = params[1];
+        queryCMML = qContentML;
+        String qFrom = params[2];
+        String qSize = params[3];
+
+        final int expectedHits = Integer.parseInt(qSize);
+        hitChunkSIZE = expectedHits;
+        nextFROM = Integer.parseInt(qFrom) + expectedHits;
 
         List<NameValuePair> getParam = new ArrayList<NameValuePair>(4);
-        if (!text.equalsIgnoreCase("")) {
-            getParam.add(new BasicNameValuePair("text", text));
+        if (!qText.equalsIgnoreCase("")) {
+            getParam.add(new BasicNameValuePair("text", qText));
         }
-        getParam.add(new BasicNameValuePair("math", contentML));
-        getParam.add(new BasicNameValuePair("from", FROM));
-        getParam.add(new BasicNameValuePair("size", SIZE));
+        getParam.add(new BasicNameValuePair("math", qContentML));
+        getParam.add(new BasicNameValuePair("from", qFrom));
+        getParam.add(new BasicNameValuePair("size", qSize));
 
         String paramString = URLEncodedUtils.format(getParam, "utf-8");
         String queryUrl = TEMA_URL + "?" + paramString;
@@ -83,7 +105,12 @@ public class TemaTask extends AsyncTask<String, Void, String> {
             HttpResponse temaHttpResp = httpClient.execute(httpGet);
             String temaResp_str = Util.getStringResponse(temaHttpResp);
 
-            return Util.processTemaResponse(temaResp_str);
+            ArrayList<String> procHits = Util.processTemaResponse(temaResp_str);
+
+            if (procHits.size() < expectedHits) hasMoreResults = false;
+            if (procHits.size() == 0) return "";
+
+            return Util.mergeHits(procHits);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -95,6 +122,9 @@ public class TemaTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        isExecuting = false;
+        final boolean wasFirstCall = firstCall;
+        firstCall = false;
         if (result == null) {
             statusDescr.setText("An error occurred.");
             statusColor.setBackground(red);
@@ -104,14 +134,25 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         progr.setVisibility(View.GONE);
         statusDescr.setText("Completed TeMa Query");
         statusColor.setBackground(green);
-
         webview.setVisibility(View.VISIBLE);
-        String htmlContent = "";
-        htmlContent += result;
-        // should we escape math elements?
+
+        if (result.isEmpty() && wasFirstCall) {
+            final String NO_RESULTS_MESSAGE = "<h3>No results.</h3>";
+            final String noResultsJs =
+                    "javascript:document.getElementById('body').innerHTML='" +
+                            NO_RESULTS_MESSAGE + "';";
+            webview.loadUrl(noResultsJs);
+            hideStatusAfterDelay();
+            return;
+        }
+
+        if (result.isEmpty()) {
+            hideStatusAfterDelay();
+            return;
+        }
 
         final String insertHitJs =
-                "javascript:document.getElementById('body').innerHTML='" + htmlContent +"';";
+                "javascript:document.getElementById('body').innerHTML +='" + result + "';";
         webview.loadUrl(insertHitJs);
 
 
@@ -121,6 +162,8 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         webview.loadUrl(renderedMathJs);
 
         hideStatusAfterDelay();
+        if (hasMoreResults) enableWebViewRefreshing();
+        else disableWebViewRefreshing();
     }
 
     private void hideStatusAfterDelay() {
@@ -133,5 +176,20 @@ public class TemaTask extends AsyncTask<String, Void, String> {
                 statusDescr.setVisibility(View.GONE);
             }
         }, DELAY);
+    }
+
+    private void enableWebViewRefreshing() {
+        webview.setOnOverScrollListener(new RefreshableWebView.OnOverScrollListener() {
+            @Override
+            public void onOverScroll() {
+                if (TemaTask.isExecuting) return;
+                new TemaTask(activity).execute(queryText, queryCMML,
+                        String.valueOf(nextFROM), String.valueOf(hitChunkSIZE));
+            }
+        });
+    }
+
+    private void disableWebViewRefreshing() {
+        webview.setOnOverScrollListener(null);
     }
 }

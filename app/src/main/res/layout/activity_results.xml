@@ -32,7 +32,7 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <WebView
+    <kwarc.com.mathwebsearch.RefreshableWebView
         android:id="@+id/results_webvw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

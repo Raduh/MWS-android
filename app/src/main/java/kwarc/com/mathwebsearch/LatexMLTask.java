@@ -98,7 +98,11 @@ public class LatexMLTask extends AsyncTask<String, Void, String> {
                 return;
             }
 
-            new TemaTask(activity).execute(qText, qCML);
+            final String DEFAULT_FROM = "0";
+            final String DEFAULT_SIZE = "5";
+
+            TemaTask.initialize();
+            new TemaTask(activity).execute(qText, qCML, DEFAULT_FROM, DEFAULT_SIZE);
         } else {
             statusDescr.setText("An error occurred.");
             statusColor.setBackground(red);

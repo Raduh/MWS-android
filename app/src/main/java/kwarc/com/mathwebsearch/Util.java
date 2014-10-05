@@ -99,8 +99,7 @@ public class Util {
         return fillSnippet(mergedSnip, maths);
     }
 
-    // TODO: return ArrayList<String> with the hits
-    public static String processTemaResponse(String temaResponse) throws JSONException {
+    public static ArrayList<String> processTemaResponse(String temaResponse) throws JSONException {
         JSONObject temaRespJSON = new JSONObject(temaResponse);
         JSONArray hits = temaRespJSON.getJSONArray("hits");
 
@@ -110,6 +109,10 @@ public class Util {
             processedHits.add(processHit(curr));
         }
 
+        return processedHits;
+    }
+
+    public static String mergeHits(ArrayList<String> processedHits) {
         StringBuilder htmlBuilder = new StringBuilder();
         for (String elem : processedHits) {
             htmlBuilder.append(elem);
