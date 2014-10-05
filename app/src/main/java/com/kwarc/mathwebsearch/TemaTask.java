@@ -152,7 +152,11 @@ public class TemaTask extends AsyncTask<String, Void, String> {
         }
 
         final String insertHitJs =
-                "javascript:document.getElementById('body').innerHTML +='" + result + "';";
+                "javascript:" +
+                        "div = document.createElement('div');" +
+                        "div.innerHTML = '" + result + "';" +
+                        "body = document.getElementById('body');" +
+                        "body.appendChild(div);";
         webview.loadUrl(insertHitJs);
 
 
