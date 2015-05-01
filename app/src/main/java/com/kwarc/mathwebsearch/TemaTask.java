@@ -34,7 +34,7 @@ public class TemaTask extends AsyncTask<String, Void, String> {
     private String queryText;
 
     private static final String TEMA_URL =
-            "http://212.201.44.161/arxiv-ntcir/php/tema_proxy.php";
+            "http://jupiter.eecs.jacobs-university.de/arxiv-ntcir/php/tema_proxy.php";
     HttpClient httpClient = new DefaultHttpClient();
 
     Activity activity;
