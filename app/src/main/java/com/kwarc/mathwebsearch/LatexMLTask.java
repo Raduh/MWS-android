@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class LatexMLTask extends AsyncTask<String, Void, String> {
     private static final String LATEXML_URL =
-            "http://212.201.44.161/arxiv-ntcir/php/latexml_proxy.php";
+            "http://jupiter.eecs.jacobs-university.de/arxiv-ntcir/php/latexml_proxy.php";
     HttpClient httpClient = new DefaultHttpClient();
     HttpPost httpPost = new HttpPost(LATEXML_URL);
 
